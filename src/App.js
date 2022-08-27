@@ -4,7 +4,7 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import Notification from './components/UI/Notification';
-import { sendCartData } from './store/cart-slice';
+import { fetchCartData, sendCartData } from './store/cart-actions';
 // import { uiActions } from './store/ui-slice';
 
 let isInitial = true;
@@ -14,6 +14,10 @@ function App() {
   const isShowCart = useSelector((state) => state.ui.cartIsVisible);
   const cart = useSelector((state) => state.cart);
   const notification = useSelector((state) => state.ui.notification);
+
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
   useEffect(() => {
     // const sendCartData = async () => {
@@ -42,8 +46,7 @@ function App() {
       isInitial = false;
       return;
     }
-
-    dispatch(sendCartData(cart));
+    if (cart.changed) dispatch(sendCartData(cart));
 
     // sendCartData().catch((error) => {
     //   dispatch(
